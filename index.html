@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Animation</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      #photo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.7);
+        z-index: 10;
+        width: 220px;
+        height: 220px;
+        object-fit: cover;
+        /* Heart shape using clip-path SVG */
+        clip-path: path('M110 200 Q10 120 55 55 Q110 0 165 55 Q210 120 110 200 Z');
+        box-shadow: 0 8px 32px rgba(255, 105, 180, 0.4), 0 2px 8px rgba(0,0,0,0.15);
+        opacity: 0;
+        pointer-events: none;
+        transition: 
+          opacity 0.7s cubic-bezier(.4,2,.3,1),
+          transform 0.7s cubic-bezier(.4,2,.3,1),
+          box-shadow 0.7s;
+      }
+      #photo.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, -50%) scale(1.08);
+        box-shadow: 0 16px 48px rgba(255, 105, 180, 0.6), 0 4px 16px rgba(0,0,0,0.18);
+      }
+      .flower-petal {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle at 60% 40%, #ffb6c1 60%, #fff 100%);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        opacity: 0;
+        transition: opacity 0.6s, transform 0.6s;
+        z-index: 9;
+      }
+      .flower-petal.show {
+        opacity: 1;
+        transform: scale(1.2) rotate(10deg);
+      }
+      .love-effect {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        transition: opacity 0.6s, transform 0.6s;
+        z-index: 9;
+        pointer-events: none;
+      }
+      .love-effect.show {
+        opacity: 1;
+        transform: scale(1.2) rotate(-10deg);
+      }
+      .love-shape {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .topping {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        opacity: 0;
+        transition: opacity 0.5s, transform 0.5s;
+        z-index: 20;
+        pointer-events: none;
+      }
+      .topping.show {
+        opacity: 1;
+        transform: scale(1.2) rotate(-10deg);
+      }
+      .pretty-btn {
+        background: linear-gradient(90deg, #ff69b4 0%, #ffb6c1 100%);
+        color: white;
+        border: none;
+        border-radius: 24px;
+        padding: 12px 32px;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-shadow: 0 4px 16px rgba(255,105,180,0.18);
+        cursor: pointer;
+        margin: 0 16px;
+        transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+        outline: none;
+      }
+      .pretty-btn:hover, .pretty-btn:focus {
+        background: linear-gradient(90deg, #ffb6c1 0%, #ff69b4 100%);
+        transform: scale(1.08);
+        box-shadow: 0 8px 24px rgba(255,105,180,0.28);
+      }
+      @media (max-width: 500px) {
+        .pretty-btn {
+          font-size: 4vw;
+          padding: 3vw 8vw;
+        }
+      }
+    </style>
+</head>
+<body>
+    <!-- Move buttons to the top center -->
+    <div style="position: fixed; top: 20px; left: 0; width: 100%; text-align: center; z-index: 20;">
+        <button id="bgm-btn" class="pretty-btn">Play Music</button>
+        <button id="view-photo-btn" class="pretty-btn">View Photo</button>
+    </div>
+    <div style="position: fixed; bottom: 20px; left: 0; width: 100%; text-align: center; z-index: 10;">
+        <p style="
+            color: #fff;
+            margin: 8px 0;
+            font-weight: bold;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #ff69b4, 0 1px 2px #000;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        ">
+            AOWKAOKW JANGAN MARAH GES AKU GABUT MAAFKAN AKU GABRIELA LIU UNPRIAN YANG BENTAR LAGI ULTAH HBD EARLY
+        </p>
+        <p style="
+            color: #fff;
+            margin: 8px 0;
+            font-size: 1.05em;
+            font-style: italic;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 6px #ffb6c1, 0 1px 2px #000;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        ">
+            KENAPA HARUS LOVE JANGAN DI TANYA PURA PURA GA TAU AJA, CUMA NGETES SKILL
+        </p>
+        <p style="
+            color: #fff;
+            margin: 8px 0;
+            font-size: 1.05em;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 6px #ffb6c1, 0 1px 2px #000;
+        ">
+            BIASAAA ANAK BINUS NI
+        </p>
+    </div>
+    <audio id="audio" src="C:\Users\ASUS\Downloads\Vocaroo 13zYLJRCqyFw.mp3" preload="loop"></audio>
+    <div id="topping-container"></div>
+    <img
+      id="photo"
+      src="C:\Users\ASUS\Downloads\WhatsApp Image 2025-08-03 at 5.15.17 PM.jpeg"
+      alt="Photo"
+    >
+    <canvas id="pinkboard"></canvas>
+    <script src="script.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const audio = document.getElementById('audio');
+    const btn = document.getElementById('bgm-btn');
+    const photoBtn = document.getElementById('view-photo-btn');
+    const photo = document.getElementById('photo');
+    const toppingContainer = document.getElementById('topping-container');
+
+    toppingContainer.style.position = 'absolute';
+    toppingContainer.style.top = '50%';
+    toppingContainer.style.left = '50%';
+    toppingContainer.style.transform = 'translate(-50%, -50%)';
+    toppingContainer.style.width = '220px';
+    toppingContainer.style.height = '220px';
+    toppingContainer.style.pointerEvents = 'none';
+
+    function showToppings() {
+        toppingContainer.innerHTML = '';
+        const toppings = [
+          { x: 40, y: 20 },
+          { x: 160, y: 30 },
+          { x: 60, y: 180 },
+          { x: 170, y: 170 },
+          { x: 110, y: 10 }
+        ];
+        toppings.forEach((pos, i) => {
+            const topping = document.createElement('div');
+            topping.className = 'topping';
+            topping.style.left = pos.x + 'px';
+            topping.style.top = pos.y + 'px';
+            topping.innerHTML = `<svg viewBox="0 0 32 29.6" width="32" height="32"><path fill="#ff69b4" d="M23.6,2.6c-2.7,0-5.1,1.7-6.6,4.3C15.5,4.3,13.1,2.6,10.4,2.6C5.7,2.6,2,6.3,2,11c0,7.1,13.1,16.1,13.6,16.4
+        c0.3,0.2,0.7,0.2,1,0C16.9,27.1,30,18.1,30,11C30,6.3,26.3,2.6,23.6,2.6z"/></svg>`;
+            toppingContainer.appendChild(topping);
+            setTimeout(() => {
+                topping.classList.add('show');
+            }, 300 * i);
+        });
+    }
+
+    function hideToppings() {
+        toppingContainer.innerHTML = '';
+    }
+
+    btn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            btn.textContent = 'Pause Music';
+        } else {
+            audio.pause();
+            btn.textContent = 'Play Music';
+        }
+    });
+
+    photoBtn.addEventListener('click', () => {
+        if (!photo.classList.contains('visible')) {
+            photo.classList.add('visible');
+            photoBtn.textContent = 'Hide Photo';
+            setTimeout(showToppings, 700); // after photo transition
+        } else {
+            photo.classList.remove('visible');
+            photoBtn.textContent = 'View Photo';
+            hideToppings();
+        }
+    });
+
+    // Show a love heart at touch/click position
+    document.body.addEventListener('touchstart', showLoveAtPoint);
+    document.body.addEventListener('mousedown', showLoveAtPoint);
+
+    function showLoveAtPoint(e) {
+        let x, y;
+        if (e.touches && e.touches.length) {
+            x = e.touches[0].clientX;
+            y = e.touches[0].clientY;
+        } else {
+            x = e.clientX;
+            y = e.clientY;
+        }
+        const love = document.createElement('div');
+        love.className = 'topping show';
+        love.style.left = (x - 16) + 'px';
+        love.style.top = (y - 16) + 'px';
+        love.style.position = 'fixed';
+        love.innerHTML = `<svg viewBox="0 0 32 29.6" width="32" height="32"><path fill="#ff69b4" d="M23.6,2.6c-2.7,0-5.1,1.7-6.6,4.3C15.5,4.3,13.1,2.6,10.4,2.6C5.7,2.6,2,6.3,2,11c0,7.1,13.1,16.1,13.6,16.4
+        c0.3,0.2,0.7,0.2,1,0C16.9,27.1,30,18.1,30,11C30,6.3,26.3,2.6,23.6,2.6z"/></svg>`;
+        document.body.appendChild(love);
+        setTimeout(() => {
+            love.style.opacity = '0';
+        }, 900);
+        setTimeout(() => {
+            love.remove();
+        }, 1300);
+    }
+});
+    </script>
+</body>
+</html>
